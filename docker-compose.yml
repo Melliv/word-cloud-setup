@@ -2,7 +2,7 @@ version: '3'
 
 services:
   rabbitmq:
-    image: "rabbitmq:3.12-management"
+    image: rabbitmq:3.12-management
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -20,7 +20,9 @@ services:
       - "5432:5432"
 
   word-cloud-core-server:
-    image: "word-cloud-core-server:latest"
+    build:
+      context: word-cloud-core-server
+      dockerfile: ../word-cloud-core-server/Dockerfile
     ports:
       - "8080:8080"
     depends_on:
@@ -30,7 +32,9 @@ services:
       - variables.env
 
   word-cloud-server-worker:
-    image: "word-cloud-server-worker:latest"
+    build:
+      context: word-cloud-server-worker
+      dockerfile: ../word-cloud-server-worker/Dockerfile
     ports:
       - "8090:8090"
     depends_on:
@@ -40,6 +44,8 @@ services:
       - variables.env
 
   word-cloud-client:
-    image: "word-cloud-client:latest"
+    build:
+      context: word-cloud-client
+      dockerfile: ../word-cloud-client/Dockerfile
     ports:
       - "3000:80"
