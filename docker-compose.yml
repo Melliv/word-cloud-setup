@@ -1,6 +1,26 @@
 version: '3'
 
 services:
+  word-cloud-client:
+    build:
+      context: word-cloud-client
+      dockerfile: ../word-cloud-client/Dockerfile
+    volumes:
+      - website:/website/build/
+    ports:
+      - "3000:3000"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - website:/usr/share/nginx/html/website
+    depends_on:
+      - word-cloud-client
+
   rabbitmq:
     image: rabbitmq:3.12-management
     ports:
@@ -43,9 +63,5 @@ services:
     env_file:
       - variables.env
 
-  word-cloud-client:
-    build:
-      context: word-cloud-client
-      dockerfile: ../word-cloud-client/Dockerfile
-    ports:
-      - "3000:80"
+volumes:
+  website:
